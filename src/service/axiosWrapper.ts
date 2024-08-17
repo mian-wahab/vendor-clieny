@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { APIResponse } from './types';
-import { ToastType } from '@/contexts/enums';
 const axiosInstance: AxiosInstance = axios.create({
     baseURL: process?.env?.NEXT_PUBLIC_API_URL as string,
     timeout: 10000, // Request timeout
