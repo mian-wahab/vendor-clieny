@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 
 const style = {
   position: 'absolute' as 'absolute',
+  height: 'auto',
+  overFlow: 'scroll',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -23,8 +25,6 @@ export default function KeepMountedModal({open, setOpen, content}: KeepMountedMo
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
-      
       <Modal
         keepMounted
         open={open}
@@ -36,6 +36,5 @@ export default function KeepMountedModal({open, setOpen, content}: KeepMountedMo
          {content}
         </Box>
       </Modal>
-    </div>
   );
 }

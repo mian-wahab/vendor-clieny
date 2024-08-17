@@ -1,7 +1,7 @@
 export const routes = {
     auth: {
-        signIn: '/sign-in',
-        signUp: '/sign-up',
+        signIn: '/auth/login',
+        signUp: '/auth/sign-up',
     },
     dashboard: {
         vendor: {

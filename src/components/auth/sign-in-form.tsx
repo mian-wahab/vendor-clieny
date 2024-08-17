@@ -50,18 +50,17 @@ export function SignInForm(): React.JSX.Element {
 
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
-      setIsPending(true);
+      // setIsPending(true);
 
       const { error, user } = await authClient.signInWithPassword(values);
-
       if (error) {
         setError('root', { type: 'server', message: error });
         setIsPending(false);
         return;
       }
-       setUser?.(user as User);
+      setUser?.(user as User);
 
-      router.refresh();
+      // router.refresh();
     },
     [setUser, router, setError]
   );

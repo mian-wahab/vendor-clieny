@@ -1,5 +1,9 @@
 export interface APIResponse {
     status:boolean;
-    data: {} | [] | null;
+    data: {} | [] | null | OnlyData;
     message: string;
+}
+
+interface OnlyData {
+    data: {} | [] | null;
 }

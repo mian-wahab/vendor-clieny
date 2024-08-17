@@ -5,9 +5,9 @@ export const paths = {
     overview: '/dashboard',
     account: '/dashboard/account',
     vendors: '/dashboard/vendors',
-    integrations: '/dashboard/integrations',
-    settings: '/dashboard/settings',
-    vendor: '/dashboard/vendor',
+    // integrations: '/ dashboard/integrations',
+    // settings: '/dashboard/settings',
+    // vendor: '/dashboard/vendor',
   },
   errors: { notFound: '/errors/not-found' },
 } as const;
