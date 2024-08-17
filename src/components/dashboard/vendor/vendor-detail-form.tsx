@@ -11,9 +11,14 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createVendor } from '@/service/vendor/createVendor';
 
-export function VendorDetailsForm(): React.JSX.Element {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+interface VendorDetailsFormProps {
+  onTrigger: () => void;
+}
+
+export function VendorDetailsForm({ onTrigger }: VendorDetailsFormProps): React.JSX.Element {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     
@@ -24,8 +29,8 @@ export function VendorDetailsForm(): React.JSX.Element {
       userName: formData.get('userName')
     };
 
-    console.log("Vendor form payload", payload);
-    
+    await createVendor(payload);
+    onTrigger(); // Trigger the parent component to refresh the table
   };
 
   return (

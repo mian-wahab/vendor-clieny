@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } f
 import { APIResponse } from './types';
 import { ToastType } from '@/contexts/enums';
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: process?.env?.NEXT_PUBLIC_API_URI as string,
+    baseURL: process?.env?.NEXT_PUBLIC_API_URL as string,
     timeout: 10000, // Request timeout
     headers: {
         'Content-Type': 'application/json'
@@ -56,6 +56,7 @@ const get = async (url: string, config: AxiosRequestConfig = {}): Promise<APIRes
 };
 
 const post = async (url: string, data: any, config: AxiosRequestConfig = {}): Promise<APIResponse> => {
+    console.log(process?.env?.NEXT_PUBLIC_API_URI);
     try {
         const response: APIResponse = await axiosInstance.post(url, data, config);
         return response;
