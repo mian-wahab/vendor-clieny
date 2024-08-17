@@ -39,7 +39,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           display: { xs: 'none', lg: 'flex' },
           justifyContent: 'center',
           p: 3,
-        }}
+        }} 
       >
         <Stack spacing={3}>
           <Stack spacing={1}>
