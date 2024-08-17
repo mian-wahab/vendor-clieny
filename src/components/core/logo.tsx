@@ -29,7 +29,7 @@ export function Logo({ color = 'dark', emblem, height = HEIGHT, width = WIDTH }:
 
   return <Box alt="logo" className='customizedlogo' component="img" height={height} src={url} width={width} />;
 }
-
+ 
 export interface DynamicLogoProps {
   colorDark?: Color;
   colorLight?: Color;

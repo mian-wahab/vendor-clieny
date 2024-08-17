@@ -12,7 +12,7 @@ export interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps): React.JSX.Element {
-  return (
+  return ( 
     <Box
       sx={{
         display: { xs: 'flex', lg: 'grid' },
