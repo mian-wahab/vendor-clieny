@@ -1,4 +1,4 @@
-// File: /home/azan/Desktop/workspace/vendor/Vendor-client/src/app/layout.tsx
+// File: /Users/aliusama/Documents/ropstam/practice/back/Vendor-client/src/app/layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
