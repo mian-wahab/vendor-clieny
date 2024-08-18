@@ -12,11 +12,11 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TextField, FormHelperText } from '@mui/material';
+import { TextField, FormHelperText, IconButton } from '@mui/material';
 import { AddVendor } from '@/service';
 import { useUser } from '@/hooks/use-user';
 import { ToastType } from '@/contexts/enums';
-
+import CloseIcon from '@mui/icons-material/Close';
 interface FTPServerProps {
   control: any;
   index: number;
@@ -33,9 +33,21 @@ const defaultValues = {
 };
 
 const FTPServer = ({ control, index, errors }: FTPServerProps) => {
+  const { remove } = useFieldArray({ control, name: 'ftps' });
+  const handleRemove = () => {
+    remove(index);
+  }
   return (
     <>
       <CardContent>
+        {/* <IconButton
+          edge="start"
+          color="inherit"
+          onClick={handleRemove}
+          aria-label="close"
+        >
+          <CloseIcon />
+        </IconButton> */}
         <Grid container spacing={3}>
           <Grid md={6} xs={12}>
             <Controller
@@ -99,14 +111,21 @@ const FTPServer = ({ control, index, errors }: FTPServerProps) => {
 
 interface VendorManagementProps {
   action: () => void;
+  editVendor: any;
 }
 
-export function VendorManagement({ action }: VendorManagementProps): React.JSX.Element {
-  const { control, handleSubmit, watch, formState: { errors } } = useForm({ defaultValues });
+export function VendorManagement({ editVendor, action }: VendorManagementProps): React.JSX.Element {
+  const [values, setValues] = React.useState<any>(editVendor?._id ? {
+    userName: editVendor.vendor.userName || '',
+    email: editVendor.vendor.email || '',
+    fullName: editVendor.vendor.fullName || '',
+    ftps: editVendor.vendor.ftps || [{ host: '', ftpUser: '', password: '' }],
+  } : { ...defaultValues });  
+  const { control, handleSubmit, watch, formState: { errors } } = useForm({ defaultValues:values });
   const { fields, append, remove } = useFieldArray({ control, name: 'ftps', rules: { validate: (value) => value.length > 0 || "At least one FTP server is required" } });
   const { toast } = useUser();
-  const onSubmit = async (data: any) => {
 
+  const onSubmit = async (data: any) => {
     const vendor = await AddVendor(data);
     if (vendor?.error) {
       toast.setToast({ isOpen: true, message: vendor.error, type: ToastType.ERROR });

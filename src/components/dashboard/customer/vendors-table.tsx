@@ -15,6 +15,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
+import DrawIcon from '@mui/icons-material/Draw';
 
 import { useSelection } from '@/hooks/use-selection';
 
@@ -77,6 +78,7 @@ export function VendorsTable({
               <TableCell>Email</TableCell>
               <TableCell>Total FTP</TableCell>
               <TableCell>Join Date</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -108,6 +110,11 @@ export function VendorsTable({
                   </TableCell>
                   <TableCell>{row.ftp?.length}</TableCell>
                   <TableCell>{row.createdAt}</TableCell>
+                  <TableCell>
+                    <Stack direction="row" spacing={1}>
+                      <Avatar sx={{ cursor: 'pointer', background:'#4E36F5' }}><DrawIcon/></Avatar>
+                    </Stack>
+                  </TableCell>
                 </TableRow>
               );
             })}

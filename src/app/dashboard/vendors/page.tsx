@@ -18,7 +18,7 @@ import { useUser } from '@/hooks/use-user';
 // export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
 
 const customers = [
-  
+
 ] satisfies Vendor[];
 
 
@@ -41,20 +41,19 @@ export default function Page(): React.JSX.Element {
 
   const getVendors = async () => {
     const vendors = await GetVendors();
-    if(vendors?.error){
+    if (vendors?.error) {
       toast.setToast({ isOpen: true, message: vendors.error, type: ToastType.ERROR });
       return setVendors([]);
     }
     console.log('vendors?.vendors?.data', vendors?.vendors?.data);
     setVendors(vendors?.vendors?.data as Vendor[]);
   }
-  console.log('vendors', vendors);  
 
-  React.useEffect (() => {
+  React.useEffect(() => {
     getVendors();
   }, []);
- 
- const filteredVendors = vendors?.filter((vendor) => {
+
+  const filteredVendors = vendors?.filter((vendor) => {
     return vendor?.fullName?.toLowerCase()?.includes(keyword) || vendor?.email?.toLowerCase()?.includes(keyword) || vendor?.userName?.toLowerCase()?.includes(keyword);
   });
   return (

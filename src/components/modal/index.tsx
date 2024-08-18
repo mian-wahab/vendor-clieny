@@ -1,40 +1,60 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  height: 'auto',
-  overFlow: 'scroll',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 'auto',
-  borderRadius: '24px',
-  boxShadow: 24,
-  p: 4,
-};
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 interface KeepMountedModal {
     open:boolean;
     setOpen: (open: boolean) => void;
     content: React.ReactElement;
 }
-export default function KeepMountedModal({open, setOpen, content}: KeepMountedModal) {
-  const handleClose = () => setOpen(false);
+export default function FullScreenDialog({open, setOpen, content}: KeepMountedModal) {
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-      <Modal
-        keepMounted
+    <React.Fragment>
+      <Dialog
+        fullScreen
         open={open}
         onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+        TransitionComponent={Transition}
       >
-        <Box sx={style}>
-         {content}
-        </Box>
-      </Modal>
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+       {content}
+      </Dialog>
+    </React.Fragment>
   );
 }
