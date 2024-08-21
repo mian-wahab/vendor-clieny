@@ -4,7 +4,6 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -14,7 +13,6 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs';
 import DrawIcon from '@mui/icons-material/Draw';
 
 import { useSelection } from '@/hooks/use-selection';
@@ -22,36 +20,45 @@ import { useSelection } from '@/hooks/use-selection';
 function noop(): void {
   // do nothing
 }
-
-export interface Vendor {
+interface Vendor {
   _id: string;
-  id: string;
   fullName: string;
   userName: string;
   email: string;
-  ftps: any[];
+  createdAt: string;
+}
+export interface Ftp {
+  _id: string;
+  host: string;
+  ftpUser: string;
+  password: string;
+  user: Vendor;
   createdAt: string;
 }
 
 interface VendorsTableProps {
   count?: number;
   page?: number;
-  rows?: Vendor[];
+  rows?: Ftp[];
   rowsPerPage?: number;
   setSelectedRow: (row: any) => void;
-  setIsOpen: (open: boolean) => void
+  setIsOpen: (open: boolean) => void;
+  setEditFtpData: (data: any) => void
+  setVendorsToShow: (data: any) => void
 }
 
-export function VendorsTable({
+export function FtpTables({
   count = 0,
   rows = [],
   page = 0,
   rowsPerPage = 0,
   setSelectedRow,
-  setIsOpen
+  setIsOpen,
+  setEditFtpData,
+  setVendorsToShow
 }: VendorsTableProps): React.JSX.Element {
   const rowIds = React.useMemo(() => {
-    return rows.map((Vendor) => Vendor.id);
+    return rows.map((Ftp) => Ftp._id);
   }, [rows]);
 
   const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
@@ -59,17 +66,36 @@ export function VendorsTable({
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
+  const setRowForEditFtp = () => {
+
+  }
+
+  const handleEditFtp = (data: any) => {
+    setIsOpen(true);
+    const dataToSend = {
+      fullName: data?.user?.fullName,
+      userId: data?.user?._id,
+      ftp: {
+        _id:data?._id,
+        host: data?._id,
+        password: data?.host,
+        ftpUser: data?.ftpUser,
+      }
+    }
+    setVendorsToShow([]);
+    setEditFtpData(dataToSend)
+  }
+
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
         <Table sx={{ minWidth: '800px' }}>
           <TableHead>
             <TableRow>
-
-              <TableCell>Full Name</TableCell>
-              <TableCell>User Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Total FTP</TableCell>
+              <TableCell>Host</TableCell>
+              <TableCell>User</TableCell>
+              <TableCell>Password</TableCell>
+              <TableCell>Vendor</TableCell>
               <TableCell>Join Date</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
@@ -77,25 +103,25 @@ export function VendorsTable({
           <TableBody>
             {rows.map((row) => {
               console.log(row)
-              const isSelected = selected?.has(row.id);
+              const isSelected = selected?.has(row._id);
 
               return (
-                <TableRow hover key={row.id} selected={isSelected}>
+                <TableRow hover key={row?._id} selected={isSelected}>
 
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Typography variant="subtitle2">{row.fullName}</Typography>
+                      <Typography variant="subtitle2">{row.host}</Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{row.userName}</TableCell>
+                  <TableCell>{row?.ftpUser}</TableCell>
                   <TableCell>
-                    {row.email}
+                    {row.password}
                   </TableCell>
-                  <TableCell>{row.ftps?.length}</TableCell>
+                  <TableCell>{row.user?.fullName}</TableCell>
                   <TableCell>{row.createdAt}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Avatar onClick={() => { setSelectedRow(row); setIsOpen(true) }} sx={{ cursor: 'pointer', background: '#4E36F5' }}><DrawIcon /></Avatar>
+                      <Avatar onClick={() => { handleEditFtp(row) }} sx={{ cursor: 'pointer', background: '#4E36F5' }}><DrawIcon /></Avatar>
                     </Stack>
                   </TableCell>
                 </TableRow>

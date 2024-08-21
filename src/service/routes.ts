@@ -7,8 +7,13 @@ export const routes = {
         vendor: {
             getAllVendor: '/vendor/getAll',
             createVendor: '/vendor/create',
-            updateVendor: '/vendor/update/:id',
-            deleteVendor: '/vendor/delete/:id',
+            updateVendor: '/vendor/update',
+            deleteVendor: '/vendor/delete',
         },
+        ftp: {
+            getAllFtp: '/ftp/getAll',
+            createFtp:'/ftp/create',
+            updateFtp:'/ftp/update'
+        }
     },
 }
