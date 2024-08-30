@@ -55,7 +55,6 @@ const get = async (url: string, config: AxiosRequestConfig = {}): Promise<APIRes
 };
 
 const post = async (url: string, data: any, config: AxiosRequestConfig = {}): Promise<APIResponse> => {
-    console.log(process?.env?.NEXT_PUBLIC_API_URI);
     try {
         const response: APIResponse = await axiosInstance.post(url, data, config);
         return response;

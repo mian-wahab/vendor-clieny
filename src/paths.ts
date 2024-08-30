@@ -7,6 +7,7 @@ export const paths = {
     account: '/dashboard/account',
     vendors: '/dashboard/vendors',
     logout: '/dashboard/logout',
+    convert: '/dashboard/convert',
     // integrations: '/ dashboard/integrations',
     // settings: '/dashboard/settings',
     // vendor: '/dashboard/vendor',

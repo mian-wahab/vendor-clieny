@@ -14,6 +14,10 @@ export const routes = {
             getAllFtp: '/ftp/getAll',
             createFtp:'/ftp/create',
             updateFtp:'/ftp/update'
-        }
+        },
+        convert: {
+            uploadAndConvertFile: '/convert/uploadAndConvertFile',
+        },
+
     },
 }
