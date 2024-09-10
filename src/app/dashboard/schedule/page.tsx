@@ -1,104 +1,143 @@
-"use client";
+"use client"
 import * as React from 'react';
-import type { Metadata } from 'next';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
-
-import SpringModal from '@/components/modal';
+import { Button, Stack, Typography, Modal, TextField, Box } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { GetFtps,
+  // createCronJob
+ } from '@/service'; // Add your service for API calls
+import { Ftp } from '@/components/dashboard/ftp/ftps-table';
 import { ToastType } from '@/contexts/enums';
-import { useUser } from '@/hooks/use-user';
-import { Ftp, FtpTables } from '@/components/dashboard/ftp/ftps-table';
-import { FtpsFilters } from '@/components/dashboard/ftp/ftps-filters';
-import { GetFtps, GetVendors } from '@/service';
-import { VendorManagement } from '@/components/vendors/Vendor';
-import { Vendor } from '@/components/dashboard/customer/vendors-table';
-
-// export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
-
-
-
-
 
 export default function Page(): React.JSX.Element {
-  const { toast } = useUser();
   const [ftps, setFtps] = React.useState<Ftp[]>([]);
-  const [editFtpData, setEditFtpData] = React.useState(null);
-  const [vendors, setVendors] = React.useState<Vendor[]>([]);
-  const [vendorsToShow, setVendorsToShow] = React.useState<Vendor[]>([])
-  const [keyword, setKeyword] = React.useState<string>('');
-  const [open, setIsOpen] = React.useState<boolean>(false);
-  const [selectedRow, setSelectedRow] = React.useState(null)
+  const [open, setOpen] = React.useState(false); // Modal open state
+  const [selectedFtp, setSelectedFtp] = React.useState<Ftp | null>(null); // Selected FTP for which cron job is being created
+  const [operations, setOperations] = React.useState(''); // Cron job operations
+  const [schedule, setSchedule] = React.useState(''); // Cron job schedule
+
   const page = 0;
   const rowsPerPage = 10;
-
-  const paginatedCustomers = applyPagination(ftps, page, rowsPerPage);
-  const handleOpenCreateVendor = () => {
-    setSelectedRow(null);
-    setIsOpen(!open);
-    setVendorsToShow(vendors)
-  }
-  const handleAction = () => {
-    getFtps();
-  }
+  const paginatedFtps = applyPagination(ftps, page, rowsPerPage);
 
   const getFtps = async () => {
     const ftps = await GetFtps();
     if (ftps?.error) {
-      toast.setToast({ isOpen: true, message: ftps.error, type: ToastType.ERROR });
       return setFtps([]);
     }
     setFtps(ftps?.ftps?.data as Ftp[]);
-  }
+  };
 
   React.useEffect(() => {
     getFtps();
   }, []);
-  const getVendors = async () => {
-    const vendors = await GetVendors();
-    if (vendors?.error) {
-      toast.setToast({ isOpen: true, message: vendors.error, type: ToastType.ERROR });
-      return setVendors([]);
+
+  const handleCreateCron = (ftp: Ftp) => {
+    setSelectedFtp(ftp);
+    setOpen(true);
+  };
+
+  const handleSubmitCronJob = async () => {
+    if (!selectedFtp || !operations || !schedule) {
+      return;
     }
-    setVendors(vendors?.vendors?.data as Vendor[]);
-  }
 
-  React.useEffect(() => {
-    getVendors();
-  }, []);
+    // Call backend API to create the cron job
+    // const response = await createCronJob({ ftpId: selectedFtp._id, operations, schedule });
+    
+    // if (response.error) {
+    //   toast.setToast({ isOpen: true, message: response.error, type: ToastType.ERROR });
+    // } else {
+    //   toast.setToast({ isOpen: true, message: 'Cron job created successfully!', type: ToastType.SUCCESS });
+    //   setOpen(false); // Close modal after submission
+    //   setOperations('');
+    //   setSchedule('');
+    // }
+  };
 
-  const filteredFtps = ftps?.filter((ftp) => {
-    return ftp?.host?.toLowerCase()?.includes(keyword) || ftp?.user?.fullName?.toLowerCase()?.includes(keyword) || ftp?.ftpUser?.toLowerCase()?.includes(keyword);
-  });
   return (
     <Stack spacing={3}>
-      <Stack direction="row" spacing={3}>
-        <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="h4">Ftps</Typography>
-        </Stack>
-        <div>
-          <Button onClick={handleOpenCreateVendor} startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-            Add
-          </Button>
-        </div>
-      </Stack>
-      <SpringModal open={open} setOpen={setIsOpen} content={<VendorManagement editVendor={selectedRow}  action={handleAction} vendors={vendorsToShow} editFtpData={editFtpData} />} />
-      <FtpsFilters setKeyword={setKeyword} />
-      <FtpTables
-        count={paginatedCustomers.length}
-        page={page}
-        rows={filteredFtps}
-        rowsPerPage={rowsPerPage}
-        setSelectedRow={setSelectedRow}
-        setIsOpen = {setIsOpen}
-        setEditFtpData = {setEditFtpData}
-        setVendorsToShow={setVendorsToShow}
-      />
+      <Typography variant="h4">FTP Schedule</Typography>
+
+      {/* FTP Table */}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>FTP Host</TableCell>
+              <TableCell>FTP User</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {paginatedFtps.map((ftp) => (
+              <TableRow key={ftp._id}>
+                <TableCell>{ftp.host}</TableCell>
+                <TableCell>{ftp.ftpUser}</TableCell>
+                <TableCell>
+                  <Button variant="contained" color="primary" onClick={() => handleCreateCron(ftp)}>
+                    Create Cron Job
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Modal for Cron Job Creation */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box sx={modalStyle}>
+          <Typography variant="h6">Create Cron Job for {selectedFtp?.host}</Typography>
+
+          <TextField
+            fullWidth
+            label="Operations"
+            placeholder="Enter operations"
+            value={operations}
+            onChange={(e) => setOperations(e.target.value)}
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Schedule"
+            placeholder="Enter schedule (cron format)"
+            value={schedule}
+            onChange={(e) => setSchedule(e.target.value)}
+            margin="normal"
+          />
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleSubmitCronJob}>
+              Submit
+            </Button>
+            <Button variant="outlined" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </Stack>
   );
 }
 
+// Pagination function
 function applyPagination(rows: Ftp[], page: number, rowsPerPage: number): Ftp[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
+
+// Modal style
+const modalStyle = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
