@@ -1,25 +1,20 @@
 "use client"
+import { Paper } from '@mui/material';
 import * as React from 'react';
-import { Button, Stack, Typography, Modal, TextField, Box } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { GetFtps,
-  // createCronJob
- } from '@/service'; // Add your service for API calls
+import { Button, Stack, Typography, Modal, TextField, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { formatISO } from 'date-fns'; // To help format date and time in ISO
 import { Ftp } from '@/components/dashboard/ftp/ftps-table';
 import { createCron } from '@/service/schedule/createCron';
+import { GetFtps } from '@/service';
 
 export default function Page(): React.JSX.Element {
   const [ftps, setFtps] = React.useState<Ftp[]>([]);
-  const [open, setOpen] = React.useState(false); // Modal open state
-  const [selectedFtp, setSelectedFtp] = React.useState<Ftp | null>(null); // Selected FTP for which cron job is being created
-  const [operations, setOperations] = React.useState('download'); // Cron job operations
-  const [schedule, setSchedule] = React.useState(''); // Cron job schedule
+  const [open, setOpen] = React.useState(false);
+  const [selectedFtp, setSelectedFtp] = React.useState<Ftp | null>(null);
+  const [operations, setOperations] = React.useState('download');
+  const [schedule, setSchedule] = React.useState(''); // Store ISO formatted schedule
+  const [selectedDate, setSelectedDate] = React.useState(''); // Store selected date
+  const [selectedTime, setSelectedTime] = React.useState(''); // Store selected time
 
   const page = 0;
   const rowsPerPage = 10;
@@ -43,20 +38,31 @@ export default function Page(): React.JSX.Element {
   };
 
   const handleSubmitCronJob = async () => {
-    if (!selectedFtp || !operations || !schedule) {
+    if (!selectedFtp || !operations || !selectedDate || !selectedTime) {
+      console.log('selectedFtp', selectedFtp);
+      console.log('operations', operations);
+      console.log('selectedDate', selectedDate);
+      console.log('selectedTime', selectedTime);
+      alert('Please fill in all fields');
       return;
     }
 
+    // Combine date and time to create a full schedule in ISO format
+    const combinedDateTime = new Date(`${selectedDate}T${selectedTime}`);
+    const isoSchedule = formatISO(combinedDateTime);
+
+    setSchedule(isoSchedule);
+
     // Call backend API to create the cron job
-    const response = await createCron({ ftpId: selectedFtp._id, operations, schedule });
+    const response = await createCron({ ftpId: selectedFtp._id, operations, schedule: isoSchedule });
     console.log('response', response);
-    
-    if (response?.statusText != 'Created') {
+
+    if (response?.statusText !== 'Created') {
       alert('Error creating cron job');
     } else {
       setOpen(false); 
-      setOperations('');
-      setSchedule('');
+      setSelectedDate('');
+      setSelectedTime('');
     }
   };
 
@@ -104,14 +110,27 @@ export default function Page(): React.JSX.Element {
             margin="normal"
             disabled
           />
+
+          {/* Date selection */}
           <TextField
             fullWidth
-            label="Schedule"
-            placeholder="Enter schedule (cron format)"
-            value={schedule}
-            onChange={(e) => setSchedule(e.target.value)}
+            label="Select Date"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
             margin="normal"
           />
+
+          {/* Time selection */}
+          <TextField
+            fullWidth
+            label="Select Time"
+            type="time"
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            margin="normal"
+          />
+
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Button variant="contained" color="primary" onClick={handleSubmitCronJob}>
               Submit
