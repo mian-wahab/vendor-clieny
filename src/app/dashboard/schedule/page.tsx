@@ -12,13 +12,13 @@ import { GetFtps,
   // createCronJob
  } from '@/service'; // Add your service for API calls
 import { Ftp } from '@/components/dashboard/ftp/ftps-table';
-import { ToastType } from '@/contexts/enums';
+import { createCron } from '@/service/schedule/createCron';
 
 export default function Page(): React.JSX.Element {
   const [ftps, setFtps] = React.useState<Ftp[]>([]);
   const [open, setOpen] = React.useState(false); // Modal open state
   const [selectedFtp, setSelectedFtp] = React.useState<Ftp | null>(null); // Selected FTP for which cron job is being created
-  const [operations, setOperations] = React.useState(''); // Cron job operations
+  const [operations, setOperations] = React.useState('download'); // Cron job operations
   const [schedule, setSchedule] = React.useState(''); // Cron job schedule
 
   const page = 0;
@@ -48,16 +48,16 @@ export default function Page(): React.JSX.Element {
     }
 
     // Call backend API to create the cron job
-    // const response = await createCronJob({ ftpId: selectedFtp._id, operations, schedule });
+    const response = await createCron({ ftpId: selectedFtp._id, operations, schedule });
+    console.log('response', response);
     
-    // if (response.error) {
-    //   toast.setToast({ isOpen: true, message: response.error, type: ToastType.ERROR });
-    // } else {
-    //   toast.setToast({ isOpen: true, message: 'Cron job created successfully!', type: ToastType.SUCCESS });
-    //   setOpen(false); // Close modal after submission
-    //   setOperations('');
-    //   setSchedule('');
-    // }
+    if (response?.statusText != 'Created') {
+      alert('Error creating cron job');
+    } else {
+      setOpen(false); 
+      setOperations('');
+      setSchedule('');
+    }
   };
 
   return (
@@ -102,6 +102,7 @@ export default function Page(): React.JSX.Element {
             value={operations}
             onChange={(e) => setOperations(e.target.value)}
             margin="normal"
+            disabled
           />
           <TextField
             fullWidth

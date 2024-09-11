@@ -18,6 +18,9 @@ export const routes = {
         convert: {
             uploadAndConvertFile: '/convert/uploadAndConvertFile',
         },
+        schedule:{
+            createCronJob:'/cron/create',
+        }
 
     },
 }
