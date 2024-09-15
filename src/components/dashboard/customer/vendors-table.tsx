@@ -16,7 +16,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 import DrawIcon from '@mui/icons-material/Draw';
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useSelection } from '@/hooks/use-selection';
 
 function noop(): void {
@@ -39,7 +39,8 @@ interface VendorsTableProps {
   rows?: Vendor[];
   rowsPerPage?: number;
   setSelectedRow: (row: any) => void;
-  setIsOpen: (open: boolean) => void
+  setIsOpen: (open: boolean) => void;
+  handleDelete: (id: string) => Promise<void>;
 }
 
 export function VendorsTable({
@@ -48,7 +49,8 @@ export function VendorsTable({
   page = 0,
   rowsPerPage = 0,
   setSelectedRow,
-  setIsOpen
+  setIsOpen,
+  handleDelete
 }: VendorsTableProps): React.JSX.Element {
   const rowIds = React.useMemo(() => {
     return rows.map((Vendor) => Vendor.id);
@@ -96,6 +98,7 @@ export function VendorsTable({
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <Avatar onClick={() => { setSelectedRow(row); setIsOpen(true) }} sx={{ cursor: 'pointer', background: '#4E36F5' }}><DrawIcon /></Avatar>
+                      <Avatar onClick={() => { handleDelete(row?._id as string) }} sx={{ cursor: 'pointer', background: '#ff0e0e' }}><DeleteForeverIcon /></Avatar>
                     </Stack>
                   </TableCell>
                 </TableRow>

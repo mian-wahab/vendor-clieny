@@ -3,12 +3,10 @@ import UploadAndConvertFile from '@/components/dashboard/convert/uploadAndConver
 import React from 'react';
 
 const FileUpload = () => {
-  
+
 
     return (
-        <div>
-           <UploadAndConvertFile />
-        </div>
+        <UploadAndConvertFile />
     );
 };
 
