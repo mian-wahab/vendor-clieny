@@ -34,7 +34,7 @@ const UploadAndConvertFile = () => {
     const page = 0;
     const rowsPerPage = 10;
 
-    const paginatedCustomers = applyPagination(convertedFiles, page, rowsPerPage);
+    const paginatedCustomers = applyPagination(convertedFiles || [], page, rowsPerPage);
     const handleUpload = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (!file) {
@@ -151,6 +151,6 @@ const UploadAndConvertFile = () => {
     );
 };
 function applyPagination(rows: ConvertedFile[], page: number, rowsPerPage: number): ConvertedFile[] {
-    return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    return rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
 export default UploadAndConvertFile;
