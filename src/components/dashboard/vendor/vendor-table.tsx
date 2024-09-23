@@ -31,8 +31,7 @@ const VendorTable: React.FC<VendorTableProps> = ({ trigger }) => {
     useEffect(() => {
         const fetchVendors = async () => {
             try {
-                const response = await getAllVendor();
-                console.log('response', response?.data?.data);
+                const response = await getAllVendor() as any;
                 setVendors(response?.data?.data);
             } catch (error) {
                 console.error('Error fetching vendors:', error);

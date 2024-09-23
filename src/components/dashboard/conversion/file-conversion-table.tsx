@@ -14,7 +14,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import DrawIcon from '@mui/icons-material/Draw';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { useSelection } from '@/hooks/use-selection';
 
 function noop(): void {
@@ -27,37 +27,27 @@ interface Vendor {
   email: string;
   createdAt: string;
 }
-export interface Ftp {
+export interface ConvertedFile {
   _id: string;
-  host: string;
-  ftpUser: string;
-  password: string;
-  user: Vendor;
+  filePath: string;
+  conversionType: string;
+  vendor: Vendor;
+  createdBy: Vendor;
   createdAt: string;
 }
 
 interface VendorsTableProps {
   count?: number;
   page?: number;
-  rows?: Ftp[];
+  rows?: ConvertedFile[];
   rowsPerPage?: number;
-  setSelectedRow: (row: any) => void;
-  setIsOpen: (open: boolean) => void;
-  setEditFtpData: (data: any) => void;
-  setVendorsToShow: (data: any) => void;
-  handleDelete: (id: string) => Promise<void>;
 }
 
-export function FtpTables({
+export function FileConversionTable({
   count = 0,
   rows = [],
   page = 0,
   rowsPerPage = 0,
-  setSelectedRow,
-  setIsOpen,
-  setEditFtpData,
-  setVendorsToShow,
-  handleDelete
 }: VendorsTableProps): React.JSX.Element {
   const rowIds = React.useMemo(() => {
     return rows.map((Ftp) => Ftp._id);
@@ -68,24 +58,10 @@ export function FtpTables({
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
-  const setRowForEditFtp = () => {
-
-  }
-
-  const handleEditFtp = (data: any) => {
-    setIsOpen(true);
-    const dataToSend = {
-      fullName: data?.user?.fullName,
-      userId: data?.user?._id,
-      ftp: {
-        _id:data?._id,
-        host: data?._id,
-        password: data?.host,
-        ftpUser: data?.ftpUser,
-      }
-    }
-    setVendorsToShow([]);
-    setEditFtpData(dataToSend)
+  const downloadFileFromBuffer = (url: string) => {
+    console.log('url', url);
+    const link = document.createElement('a');
+    link.href = url;
   }
 
   return (
@@ -94,37 +70,34 @@ export function FtpTables({
         <Table sx={{ minWidth: '800px' }}>
           <TableHead>
             <TableRow>
-              <TableCell>Host</TableCell>
-              <TableCell>User</TableCell>
-              <TableCell>Password</TableCell>
-              <TableCell>Members</TableCell>
-              <TableCell>Join Date</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Vendor</TableCell>
+              <TableCell>Converted By</TableCell>
+              <TableCell>Date</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
-              console.log(row)
+            {rows?.map((row) => {
               const isSelected = selected?.has(row._id);
-
               return (
                 <TableRow hover key={row?._id} selected={isSelected}>
-
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Typography variant="subtitle2">{row.host}</Typography>
+                      <Typography variant="subtitle2">{row?.conversionType?.toUpperCase()}</Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{row?.ftpUser}</TableCell>
-                  <TableCell>
-                    {row.password}
-                  </TableCell>
-                  <TableCell>{row.user?.fullName}</TableCell>
+                  <TableCell>{row?.vendor ? row?.vendor?.fullName : <span>NA</span>}</TableCell>
+                  <TableCell>{row?.createdBy?.fullName}</TableCell>
                   <TableCell>{row.createdAt}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Avatar onClick={() => { handleEditFtp(row) }} sx={{ cursor: 'pointer', background: '#4E36F5' }}><DrawIcon /></Avatar>
-                      <Avatar onClick={() => { handleDelete(row?._id as string) }} sx={{ cursor: 'pointer', background: '#ff0e0e' }}><DeleteForeverIcon /></Avatar>
+                      <Avatar sx={{ cursor: 'pointer', background: '#4E36F5' }}> <a style= {{
+                        // make default stle none
+                        textDecoration: 'none',
+                        color: 'white',
+                        
+                      }} href={process?.env?.NEXT_PUBLIC_DOWNLOAD_CONVERTED_URL_LOCAL + "/" + row?.filePath} target='_blank'><CloudDownloadIcon /></a> </Avatar>
                     </Stack>
                   </TableCell>
                 </TableRow>

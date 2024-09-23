@@ -13,10 +13,13 @@ export const routes = {
         ftp: {
             getAllFtp: '/ftp/getAll',
             createFtp:'/ftp/create',
-            updateFtp:'/ftp/update'
+            updateFtp:'/ftp/update',
+            deleteFtp:'/ftp/delete',
         },
         convert: {
             uploadAndConvertFile: '/convert/uploadAndConvertFile',
+            getAllConvertedFiles: '/convert/getAll',
+
         },
         schedule:{
             createCronJob:'/cron/create',

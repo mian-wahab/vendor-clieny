@@ -183,7 +183,7 @@ export function VendorManagement({ editVendor = null, action, vendors = [], edit
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
-        <CardHeader subheader="The information can be editable" title={editVendor?._id ? 'Update Vendor' : (vendors?.length > 0 ? 'Add New Ftp' : 'Add New Vendor')} />
+        <CardHeader subheader="The information can be editable" title={editVendor?._id ? 'Update Member' : (vendors?.length > 0 ? 'Add New Ftp' : 'Add New Member')} />
         <Divider />
         {vendorData?.length > 0
           &&
@@ -295,7 +295,7 @@ export function VendorManagement({ editVendor = null, action, vendors = [], edit
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button type="submit" variant="contained">{editVendor?._id ? 'Update Vendor' : (vendors?.length > 0 ? 'Add New Ftp' : 'Add Vendor')}</Button>
+          <Button type="submit" variant="contained">{editVendor?._id ? 'Update Member' : (vendors?.length > 0 ? 'Add New Ftp' : 'Add Member')}</Button>
         </CardActions>
       </Card>
     </form>

@@ -1,5 +1,5 @@
 import { User } from "@/types/user";
-import { get, post, put } from "./axiosWrapper";
+import { del, get, post, put } from "./axiosWrapper";
 import { routes } from "./routes";
 import { SignInWithPasswordParams } from "@/lib/auth/client";
 
@@ -42,6 +42,14 @@ export const GetVendors = async () => {
     }
     return { vendors: null, error: vendors.message as string };
 }
+export const  DeleteVendor = async (id: string) => {   
+    const vendor = await del(`${routes.dashboard.vendor.deleteVendor}/${id}`);
+    if (vendor.status) {
+        return { vendor: vendor.data, error: null };
+    }
+    return { vendor: null, error: vendor.message as string };
+}
+
 
 
 // Manage Ftps
@@ -65,4 +73,21 @@ export const UpdateFtp = async (id: string, data: any) => {
         return { vendor: ftp.data, message: ftp?.message, error: null };
     }
     return { ftp: null, error: ftp.message as string };
+}
+export const DeleteFtp = async (id: string) => {
+    const ftp = await del(`${routes.dashboard.ftp.deleteFtp}/${id}`);
+    if (ftp.status) {
+        return { vendor: ftp.data, error: null };
+    }
+    return { ftp: null, error: ftp.message as string };
+}
+
+
+// File Conversion
+export const GetAllConvertedFiles = async () => {
+    const files = await get(routes.dashboard.convert.getAllConvertedFiles);
+    if (files.status) {
+        return { files: files.data as any, error: null };
+    }
+    return { files: null, error: files.message as string };
 }
