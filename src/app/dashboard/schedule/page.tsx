@@ -83,7 +83,7 @@ export default function Page(): React.JSX.Element {
         schedule: isoSchedule,
       });
   
-      if (response.status === 201) {
+      if (response?.statusText && response.statusText !== 'Created') {
         setOpen(false); // Close the modal
         setSelectedDate(""); // Reset the date
         setSelectedTime(""); // Reset the time

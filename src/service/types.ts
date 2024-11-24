@@ -12,7 +12,7 @@ export interface APIResponse<T = any> {
     status: number;
     data: T;
     message: string;
-    statusText?: string;
+    statusText: string;
 }
   
   // Define OnlyData if necessary for specific cases
