@@ -54,14 +54,40 @@ const get = async (url: string, config: AxiosRequestConfig = {}): Promise<APIRes
     }
 };
 
+// const post = async (url: string, data: any, config: AxiosRequestConfig = {}): Promise<APIResponse> => {
+//     try {
+//         const response: APIResponse = await axiosInstance.post(url, data, config);
+//         return response;
+//     } catch (error) {
+//         return handleError(error as AxiosError);
+//     }
+// };
 const post = async (url: string, data: any, config: AxiosRequestConfig = {}): Promise<APIResponse> => {
     try {
-        const response: APIResponse = await axiosInstance.post(url, data, config);
-        return response;
+        const response: AxiosResponse = await axiosInstance.post(url, data, config);
+        return {
+            status: response.status, // HTTP status code
+            data: response.data, // Response payload
+            message: response.statusText, // Status message
+            statusText: response.statusText, // Optional, similar to message
+        };
     } catch (error) {
         return handleError(error as AxiosError);
     }
 };
+// const post = async <TData, TResponse>(
+//     url: string,
+//     data: TData,
+//     config: AxiosRequestConfig = {}
+// ): Promise<TResponse> => {
+//     try {
+//         const response = await axiosInstance.post<TResponse>(url, data, config);
+//         return response.data;
+//     } catch (error) {
+//         return handleError(error as AxiosError) as unknown as TResponse;
+//     }
+// };
+
 
 const put = async (url: string, data: any, config: AxiosRequestConfig = {}): Promise<APIResponse> => {
     try {

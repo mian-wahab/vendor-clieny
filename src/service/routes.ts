@@ -23,6 +23,7 @@ export const routes = {
         },
         schedule:{
             createCronJob:'/cron/create',
+            statusText: 'status',
         }
 
     },

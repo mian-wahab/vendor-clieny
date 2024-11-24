@@ -37,34 +37,66 @@ export default function Page(): React.JSX.Element {
     setOpen(true);
   };
 
+  // const handleSubmitCronJob = async () => {
+  //   if (!selectedFtp || !operations || !selectedDate || !selectedTime) {
+  //     console.log('selectedFtp', selectedFtp);
+  //     console.log('operations', operations);
+  //     console.log('selectedDate', selectedDate);
+  //     console.log('selectedTime', selectedTime);
+  //     alert('Please fill in all fields');
+  //     return;
+  //   } 
+
+  //   // Combine date and time to create a full schedule in ISO format
+  //   const combinedDateTime = new Date(`${selectedDate}T${selectedTime}`);
+  //   const isoSchedule = formatISO(combinedDateTime);
+
+  //   setSchedule(isoSchedule);
+
+  //   // Call backend API to create the cron job
+  //   const response = await createCron({ ftpId: selectedFtp._id, operations, schedule: isoSchedule });
+  //   console.log('response', response);
+
+  //   if (response?.statusText !== 'Created') {
+  //     alert('Error creating cron job');
+  //   } else {
+  //     setOpen(false); 
+  //     setSelectedDate('');
+  //     setSelectedTime('');
+  //   }
+  // };
   const handleSubmitCronJob = async () => {
     if (!selectedFtp || !operations || !selectedDate || !selectedTime) {
-      console.log('selectedFtp', selectedFtp);
-      console.log('operations', operations);
-      console.log('selectedDate', selectedDate);
-      console.log('selectedTime', selectedTime);
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
-
-    // Combine date and time to create a full schedule in ISO format
+  
     const combinedDateTime = new Date(`${selectedDate}T${selectedTime}`);
-    const isoSchedule = formatISO(combinedDateTime);
-
+    const isoSchedule = combinedDateTime.toISOString();
+  
     setSchedule(isoSchedule);
-
-    // Call backend API to create the cron job
-    const response = await createCron({ ftpId: selectedFtp._id, operations, schedule: isoSchedule });
-    console.log('response', response);
-
-    if (response?.statusText !== 'Created') {
-      alert('Error creating cron job');
-    } else {
-      setOpen(false); 
-      setSelectedDate('');
-      setSelectedTime('');
+  
+    try {
+      const response = await createCron({
+        ftpId: selectedFtp._id,
+        operations,
+        schedule: isoSchedule,
+      });
+  
+      if (response.status === 201) {
+        setOpen(false); // Close the modal
+        setSelectedDate(""); // Reset the date
+        setSelectedTime(""); // Reset the time
+      } else {
+        alert(`Error creating cron job: ${response.statusText || response.message}`);
+      }
+    } catch (error) {
+      console.error("Error creating cron job:", error);
+      alert("An unexpected error occurred");
     }
   };
+  
+  
 
   return (
     <Stack spacing={3}>

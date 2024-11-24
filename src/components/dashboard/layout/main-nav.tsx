@@ -17,7 +17,7 @@ import { usePopover } from '@/hooks/use-popover';
 import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
 import { Alert, Snackbar, SnackbarCloseReason } from '@mui/material';
-import { useUser } from '@/hooks/use-user';
+import { useUser } from '@/hooks/use-user'; 
 export function MainNav(): React.JSX.Element {
   const { toast } = useUser();
   const [openNav, setOpenNav] = React.useState<boolean>(false);

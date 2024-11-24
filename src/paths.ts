@@ -10,7 +10,7 @@ export const paths = {
     schedule: '/dashboard/schedule',
     convert: '/dashboard/convert',
     // integrations: '/ dashboard/integrations',
-    // settings: '/dashboard/settings',
+    settings: '/dashboard/settings',
     // vendor: '/dashboard/vendor',
   },
   errors: { notFound: '/errors/not-found' },
